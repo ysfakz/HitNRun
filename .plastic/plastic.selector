@@ -1,0 +1,4 @@
+repository "HitNRun@ysfakz@cloud"
+  path "/"
+    br "/main"
+    co "/main"
