@@ -15,7 +15,7 @@ public class Obstacle : MonoBehaviour {
     IEnumerator DeactivateAfterDelay(float delay, GameObject gameObject)
     {
         yield return new WaitForSeconds(delay);
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
 }

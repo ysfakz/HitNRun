@@ -9,11 +9,16 @@ public class ObstacleSpawner : MonoBehaviour {
     private int zPos;
     private int enemyCount;
     public int enemyCountMax = 10;
+    public Transform spawnArea;
 
     private void Start() {
         StartCoroutine(SpawnObstacle());
         // CarController2 carController2 = GetComponent<CarController2>();
         CarController2.OnPlayerScored += CarController_OnPlayerScored;
+    }
+
+    private void Update() {
+        // Debug.Log(enemyCount);
     }
 
     // IEnumerator SpawnObstacle() {
@@ -35,7 +40,8 @@ public class ObstacleSpawner : MonoBehaviour {
             if (GameObject.FindGameObjectsWithTag("Person").Length < enemyCountMax) {
                 xPos = Random.Range(-26, 26);
                 zPos = Random.Range(-26, 26);
-                Instantiate(obstacle, new Vector3(xPos, 0, zPos), Quaternion.identity);
+                Instantiate(obstacle, new Vector3(xPos, 0, zPos), Quaternion.identity, spawnArea);
+                // enemyCount++;
             }
             yield return new WaitForSeconds(2f);
         }
