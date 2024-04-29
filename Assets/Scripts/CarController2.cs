@@ -6,17 +6,22 @@ using UnityEngine.EventSystems;
 
 public class CarController2 : MonoBehaviour {
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private AudioClip idleAudio;
+    [SerializeField] private AudioClip movingAudio;
     public static event EventHandler OnPlayerScored;
     private float moveInput;
     private float turnInput;
+    private bool isMoving = false;
     public float collisionForce = 1000f;
     public float movementSpeed;
     public float reverseSpeed;
     public float turnSpeed;
     public Rigidbody rb;
+    private AudioSource audioSource;
 
     private void Start() {
         rb.transform.parent = null;
+        PlaySound(idleAudio);
     }
 
     private void Update() {
@@ -28,6 +33,13 @@ public class CarController2 : MonoBehaviour {
 
         float newRotation = turnInput * turnSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical");
         transform.Rotate(0, newRotation, 0, Space.World);
+
+        isMoving = rb.velocity.magnitude > 0.1f;
+        // if (isMoving) {
+        //     PlaySound(movingAudio);
+        // } else {
+        //     PlaySound(idleAudio);
+        // }
     }
 
     private void FixedUpdate() {
@@ -41,6 +53,14 @@ public class CarController2 : MonoBehaviour {
                 gameManager.Scored();
                 OnPlayerScored?.Invoke(this, EventArgs.Empty);
             }
+        }
+    }
+
+    private void PlaySound(AudioClip audioClip) {
+        audioSource = GetComponent<AudioSource>();
+        if (audioClip != null && audioSource != null) {
+            audioSource.clip = audioClip;
+            audioSource.Play();
         }
     }
 
