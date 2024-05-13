@@ -4,32 +4,31 @@ using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour {
 
+    [SerializeField] GameManager gameManager;
     public GameObject obstacle;
     private int xPos;
     private int zPos;
     private int enemyCount;
     public int enemyCountMax = 10;
     public Transform spawnArea;
+    private bool isActive = false;
+    private Coroutine spawnRoutine;
 
     private void Start() {
-        StartCoroutine(SpawnObstacle());
         // CarController2 carController2 = GetComponent<CarController2>();
         CarController2.OnPlayerScored += CarController_OnPlayerScored;
     }
 
     private void Update() {
-        // Debug.Log(enemyCount);
+        if (gameManager.IsGamePlaying() && !isActive) {
+            spawnRoutine = StartCoroutine(SpawnObstacle());
+            isActive = true;
+        }
+        if (gameManager.IsGameOver() && isActive) {
+            StopCoroutine(spawnRoutine);
+            isActive = false;
+        }
     }
-
-    // IEnumerator SpawnObstacle() {
-    //     while (enemyCount < enemyCountMax) {
-    //         xPos = Random.Range(-26, 26);
-    //         zPos = Random.Range(-26, 26);
-    //         Instantiate(obstacle, new Vector3(xPos, 0, zPos), Quaternion.identity);
-    //         enemyCount++;
-    //         yield return new WaitForSeconds(2f);
-    //     }
-    // }
 
     private void CarController_OnPlayerScored(object sender, System.EventArgs e) {
         enemyCount--;

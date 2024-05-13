@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour {
 
     private void Update() {
         FindWaitingToStartUI();
-        Debug.Log(currentState);
 
         switch (currentState) {
             case State.WaitingToStart:
@@ -68,6 +67,18 @@ public class GameManager : MonoBehaviour {
 
     public float GetGamePlayingTimerNormalized() {
         return 1 - (gamePlayingTimer / gamePlayingTimerMax);
+    }
+
+    public bool IsWaitingToStart() {
+        return currentState == State.WaitingToStart;
+    }
+
+    public bool IsGamePlaying() {
+        return currentState == State.GamePlaying;
+    }
+
+    public bool IsGameOver() {
+        return currentState == State.GameOver;
     }
 
 }
