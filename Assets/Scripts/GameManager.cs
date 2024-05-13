@@ -7,7 +7,10 @@ public class GameManager : MonoBehaviour {
 
     private int score;
     private float gamePlayingTimer;
-    private float gamePlayingTimerMax = 10f;
+    private float gamePlayingTimerMax = 60f;
+    private bool isGamePaused = false;
+    public event EventHandler OnGamePaused;
+    public event EventHandler OnGameUnpaused;
     private enum State {
         WaitingToStart,
         GamePlaying,
@@ -37,6 +40,9 @@ public class GameManager : MonoBehaviour {
                 gamePlayingTimer -= Time.deltaTime;
                 if (gamePlayingTimer <= 0f) {
                     currentState = State.GameOver;
+                }
+                if (Input.GetKeyDown(KeyCode.Escape)) {
+                    TogglePauseGame();
                 }
                 break;
             case State.GameOver:
@@ -79,6 +85,17 @@ public class GameManager : MonoBehaviour {
 
     public bool IsGameOver() {
         return currentState == State.GameOver;
+    }
+
+    public void TogglePauseGame() {
+        isGamePaused = !isGamePaused;
+        if (isGamePaused) {
+            Time.timeScale = 0f;
+            OnGamePaused?.Invoke(this, EventArgs.Empty);
+        } else {
+            Time.timeScale = 1f;
+            OnGameUnpaused?.Invoke(this, EventArgs.Empty);
+        }
     }
 
 }
